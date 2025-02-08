@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Zerodha Extension",
+  "version": "1.0",
+  "description": "A Chrome extension for adding functionality to the Streak utility by Kite.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "scripts/workers/background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/streak-logo-16x16.png",
+      "32": "images/streak-logo-32x32.png",
+      "48": "images/streak-logo-48x48.png",
+      "128": "images/streak-logo-128x128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.streak.tech/scanner/*", "https://streak.tech/scanner/*"],
+      "js": ["scripts/content/insertColumn.js"],
+      "css": ["styles/streak.css"]
+    }
+  ]
+}

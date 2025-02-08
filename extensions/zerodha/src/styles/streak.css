@@ -1,0 +1,31 @@
+:root {
+
+  --color-scale-10: rgb(186, 33, 35);
+  --color-scale-20: rgb(235, 67, 45);
+  --color-scale-30: rgb(240, 107, 40);
+  --color-scale-40: rgb(249, 178, 36);
+  --color-scale-50: rgb(117, 141, 48);
+  --color-scale-60: rgb(13, 110, 56);
+  --color-scale-70: rgb(9, 73, 35);
+  --calcValueColor: var(--color-scale-40);
+}
+td.value-column {
+  position: relative;
+}
+td.value-column .value-text::before {
+  display: block;
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 3px;
+  margin-left: -15px;
+  border-radius: 10%;
+  background-color: var(--calcValueColor);
+}
+
+td.value-column.empty .value-text::before {
+  background-color: transparent;
+}
