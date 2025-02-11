@@ -1,11 +1,25 @@
 :root {
   --kite-ext-panel-height: 300px;
+  --kite-ext-panel-transition-time: 0.1s;
+  --kite-ext-panel-transition-ease: ease-in-out;
 }
-.app .container .container-left .marketwatch-wrap {
-  height: calc(100% - 50px - var(--kite-ext-panel-height)) !important;
+.app .container .container-left .marketwatch-wrap{
+  transition: height var(--kite-ext-panel-transition-time) var(--kite-ext-panel-transition-ease);
   .marketwatch-selector {
-    bottom: var(--kite-ext-panel-height);
-    border-bottom: 1px solid var(--color-border-default);
+    transition: bottom var(--kite-ext-panel-transition-time) var(--kite-ext-panel-transition-ease);
+  }
+}
+.app .container .container-left.ext-panel-on {
+  .marketwatch-wrap {
+    height: calc(100% - 50px - var(--kite-ext-panel-height)) !important;
+    .marketwatch-selector {
+      bottom: var(--kite-ext-panel-height);
+      border-bottom: 1px solid var(--color-border-default);
+    }
+  }
+  #kite-ext-panel {
+    height: var(--kite-ext-panel-height);;
+    overflow: hidden;
   }
 }
 #kite-ext-panel {
@@ -15,7 +29,8 @@
   bottom: 0px;
   position: fixed;
   width: var(--left-content-width);
-  height: var(--kite-ext-panel-height);
+  height: 0px;
+  transition: height var(--kite-ext-panel-transition-time) var(--kite-ext-panel-transition-ease);
   h3 {
     margin-top: 7px;
     margin-bottom: 5px;

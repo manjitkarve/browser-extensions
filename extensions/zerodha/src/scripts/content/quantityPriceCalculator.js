@@ -109,12 +109,20 @@
    */
   my.initUI = function() {
     if (!nodes.panel) {
-      document.querySelector('#app .container-left').insertAdjacentHTML('beforeend', panelHTML);
+      nodes.containerLeft = document.querySelector('#app .container-left');
+      nodes.containerLeft.insertAdjacentHTML('beforeend', panelHTML);
       nodes.panel = document.getElementById('kite-ext-panel');
       document.body.addEventListener('click', globalListener);
+      document.body.addEventListener('keydown', (e) => {
+        if (e.altKey && e.key === 'q') {
+          togglePanel();
+        }
+      });
+      togglePanel();
       nodes.panel.addEventListener('input', function(e) {
         recalculate();
       });
+
     }
   }
 
@@ -252,6 +260,12 @@
       } else {
         targetEl.innerText = value;
       }
+    }
+  }
+
+  function togglePanel() {
+    if (nodes.panel) {
+      nodes.containerLeft.classList.toggle('ext-panel-on');
     }
   }
 
