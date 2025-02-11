@@ -24,6 +24,11 @@
       "matches": ["https://www.streak.tech/scanner/*", "https://streak.tech/scanner/*"],
       "js": ["scripts/content/insertColumn.js"],
       "css": ["styles/streak.css"]
+    },
+    {
+      "matches": ["https://kite.zerodha.com/*"],
+      "js": ["scripts/content/quantityPriceCalculator.js"],
+      "css": ["styles/kite.css"]
     }
   ]
 }
