@@ -114,7 +114,7 @@
       nodes.panel = document.getElementById('kite-ext-panel');
       document.body.addEventListener('click', globalListener);
       document.body.addEventListener('keydown', (e) => {
-        if (e.altKey && e.key === 'q') {
+        if (e.altKey && e.key === 'a') {
           togglePanel();
         }
       });
@@ -211,8 +211,8 @@
    */
   function pickNumber(el) {
     let text = '';
-    if (el.matches('.symbol-wrapper') || getClosestAncestor(el, '.symbol-wrapper')) {
-      ancestor = getClosestAncestor(el, '.info');
+    if (el.matches('.symbol-wrapper') || getClosestAncestor(el, '.symbol-wrapper') || el.matches('.info-wrapper')) {
+      ancestor = getClosestAncestor(el, '.info-wrapper');
       if (ancestor) {
         text = ancestor.querySelector('.last-price').innerText;
       }
