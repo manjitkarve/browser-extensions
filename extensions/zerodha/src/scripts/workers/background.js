@@ -12,4 +12,7 @@ chrome.action.onClicked.addListener((tab) => {
   if (tab.url.includes('streak.tech/scanner/')) {
     chrome.tabs.sendMessage(tab.id, {action: "insertColumn"});
   }
+  if (tab.url.includes('kite.zerodha.com')) {
+    chrome.tabs.sendMessage(tab.id, {action: "toggleSellPricePanel"});
+  }
 });

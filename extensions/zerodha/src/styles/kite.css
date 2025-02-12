@@ -1,7 +1,10 @@
 :root {
-  --kite-ext-panel-height: 300px;
+  --kite-ext-panel-height: 95px;
   --kite-ext-panel-transition-time: 0.1s;
   --kite-ext-panel-transition-ease: ease-in-out;
+}
+.kite-ext-show-3-panels {
+  --kite-ext-panel-height: 140px;
 }
 .app .container .container-left .marketwatch-wrap{
   transition: height var(--kite-ext-panel-transition-time) var(--kite-ext-panel-transition-ease);
@@ -34,6 +37,7 @@
   h3 {
     margin-top: 7px;
     margin-bottom: 5px;
+    display: none;
   }
   input {
     border: 1px solid var(--color-border-6);
@@ -62,6 +66,9 @@
       font-weight: 900;
     }
   }
+  .input-group-container.hidden {
+    display: none;
+  }
   table {
     width: 100%;
   }
@@ -69,10 +76,11 @@
     text-align: left;
   }
   th {
-    font-weight: 900;
+    font-weight: 400;
+    line-height: 1.2;
   }
   .input-group-container {
-    padding: 4px var(--spacing-tb) var(--spacing-lr);
+    padding: 0 10px 4px;
   }
   .bg-blue {
     background-color: rgb(236,245,255);
