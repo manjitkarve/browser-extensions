@@ -10,12 +10,12 @@
       <h3 class="secondary-title"><span class="icon icon-briefcase"></span><span>Quantity</span></h3>
       <div class="input-group">
         <div class="input-group-item">
-          <label for="funds">Funds <span class="keys">[Ctrl+Alt]</span></label>
+          <label for="funds">Funds <span class="keys">[Alt]</span></label>
           <input type="number" id="funds" />
         </div>
         <div class="operator">/</div>
         <div class="input-group-item">
-          <label for="price">Price <span class="keys">[Ctrl]</span></label>
+          <label for="price">Price <span class="keys">[Shift]</span></label>
           <input type="number" id="price" />
         </div>
         <div class="operator">=</div>
@@ -38,7 +38,7 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Price <span class="keys">[Alt]</span></th>
+              <th>Price <span class="keys">[Ctrl]</span></th>
               <th>x 0.06%</th>
               <th>x 0.16%</th>
               <th>x 0.26%</th>
@@ -68,7 +68,7 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Price <span class="keys">[Shift]</span></th>
+              <th>Price <span class="keys">[Ctrl+Alt]</span></th>
               <th>/ 0.06%</th>
               <th>/ 0.16%</th>
               <th>/ 0.26%</th>
@@ -133,19 +133,19 @@
   function globalListener(e) {
     console.log(e);
     let captured = false;
-    if (e.ctrlKey && e.altKey && !e.shiftKey) {
+    if (!e.ctrlKey && e.altKey && !e.shiftKey) {
       captureAndSet(e.target, '#funds');
       captured = true;
     }
-    if (e.ctrlKey && !e.altKey && !e.shiftKey) {
+    if (!e.ctrlKey && !e.altKey && e.shiftKey) {
       captureAndSet(e.target, '#price');
       captured = true;
     }
-    if (!e.ctrlKey && e.altKey && !e.shiftKey) {
+    if (e.ctrlKey && !e.altKey && !e.shiftKey) {
       captureAndSet(e.target, '#target-price');
       captured = true;
     }
-    if (!e.ctrlKey && !e.altKey && e.shiftKey) {
+    if (e.ctrlKey && e.altKey && !e.shiftKey) {
       captureAndSet(e.target, '#buying-price');
       captured = true;
     }
