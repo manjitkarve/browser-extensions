@@ -20,16 +20,16 @@
         </div>
         <div class="operator">=</div>
         <div class="input-group-item">
-          <label for="quantity">Quantity</label>
+          <label for="quantity">Qty</label>
           <input type="number" id="quantity" disabled />
         </div>
       </div>
     </div>
 
     <div class='input-group-container bg-green'>
-      <h3 class="secondary-title"><span class="icon icon-trending-up"></span><span>Target Price</span></h3>
-      <div id="target-price-container">
-        <table id="target-price-table" class="price-table">
+      <h3 class="secondary-title"><span class="icon icon-trending-up"></span><span>Buy price</span></h3>
+      <div id="buy-price-container">
+        <table id="buy-price-table" class="price-table">
           <colgroup>
             <col style="width: 35%"/>
             <col style="width: 21%"/>
@@ -38,15 +38,15 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Price <span class="keys">[Ctrl]</span></th>
-              <th>x 0.06%</th>
-              <th>x 0.16%</th>
-              <th>x 0.26%</th>
+              <th>Buy price <span class="keys">[Ctrl]</span></th>
+              <th>SP1</th>
+              <th>SP2</th>
+              <th>SP3</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class='price'><input type='number' id="target-price"/></td>
+              <td class='price'><input type='number' id="buy-price"/></td>
               <td class='par'></td>
               <td class='x-16'></td>
               <td class='x-26'></td>
@@ -56,10 +56,10 @@
       </div>
     </div>
 
-    <div class='input-group-container bg-red'>
-      <h3 class="secondary-title"><span class="icon icon-pie-chart"></span><span>Buying Price</span></h3>
-      <div id="buying-price-container">
-        <table id="buying-price-table" class="price-table">
+    <div class='input-group-container bg-red hidden' id="sell-price-input-group-container">
+      <h3 class="secondary-title"><span class="icon icon-pie-chart"></span><span>Sell price</span></h3>
+      <div id="sell-price-container">
+        <table id="sell-price-table" class="price-table">
           <colgroup>
             <col style="width: 35%"/>
             <col style="width: 21%"/>
@@ -68,15 +68,15 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Price <span class="keys">[Ctrl+Alt]</span></th>
-              <th>/ 0.06%</th>
-              <th>/ 0.16%</th>
-              <th>/ 0.26%</th>
+              <th>Sell price <span class="keys">[Ctrl+Alt]</span></th>
+              <th>SP1</th>
+              <th>SP2</th>
+              <th>SP3</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class='price'><input type='number' id="buying-price"/></td>
+              <td class='price'><input type='number' id="sell-price"/></td>
               <td class='par'></td>
               <td class='x-16'></td>
               <td class='x-26'></td>
@@ -122,7 +122,7 @@
       nodes.panel.addEventListener('input', function(e) {
         recalculate();
       });
-
+      document.body.classList.add('kite-ext-show-2-panels'); // third panel hidden
     }
   }
 
@@ -142,11 +142,11 @@
       captured = true;
     }
     if (e.ctrlKey && !e.altKey && !e.shiftKey) {
-      captureAndSet(e.target, '#target-price');
+      captureAndSet(e.target, '#buy-price');
       captured = true;
     }
     if (e.ctrlKey && e.altKey && !e.shiftKey) {
-      captureAndSet(e.target, '#buying-price');
+      captureAndSet(e.target, '#sell-price');
       captured = true;
     }
     if (captured) {
@@ -177,14 +177,14 @@
       quantity = (funds / price).toFixed(2);
     }
     nodes.panel.querySelector('#quantity').value = quantity;
-    const targetPrice = extractNumber(nodes.panel.querySelector('#target-price').value);
-    const buyingPrice = extractNumber(nodes.panel.querySelector('#buying-price').value);
-    nodes.panel.querySelector('#target-price-table .par').innerText = (targetPrice*1.0006).toFixed(2);  
-    nodes.panel.querySelector('#target-price-table .x-16').innerText = (targetPrice*1.0016).toFixed(2);
-    nodes.panel.querySelector('#target-price-table .x-26').innerText = (targetPrice*1.0026).toFixed(2);
-    nodes.panel.querySelector('#buying-price-table .par').innerText = (buyingPrice/1.0006).toFixed(2);
-    nodes.panel.querySelector('#buying-price-table .x-16').innerText = (buyingPrice/1.0016).toFixed(2);
-    nodes.panel.querySelector('#buying-price-table .x-26').innerText = (buyingPrice/1.0026).toFixed(2);
+    const targetPrice = extractNumber(nodes.panel.querySelector('#buy-price').value);
+    const buyingPrice = extractNumber(nodes.panel.querySelector('#sell-price').value);
+    nodes.panel.querySelector('#buy-price-table .par').innerText = (targetPrice*1.0006).toFixed(2);  
+    nodes.panel.querySelector('#buy-price-table .x-16').innerText = (targetPrice*1.0016).toFixed(2);
+    nodes.panel.querySelector('#buy-price-table .x-26').innerText = (targetPrice*1.0026).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .par').innerText = (buyingPrice/1.0006).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .x-16').innerText = (buyingPrice/1.0016).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .x-26').innerText = (buyingPrice/1.0026).toFixed(2);
   }
 
   /**
@@ -269,6 +269,23 @@
     }
   }
 
+  my.toggleSellPricePanel = function() {
+    if (nodes.panel) {
+      const sellPriceInputGroup = nodes.panel.querySelector('#sell-price-input-group-container');
+      if (sellPriceInputGroup) {
+        if (sellPriceInputGroup.classList.contains('hidden')) {
+          sellPriceInputGroup.classList.remove('hidden');
+          document.body.classList.remove('kite-ext-show-2-panels');
+          document.body.classList.add('kite-ext-show-3-panels');
+        } else {
+          sellPriceInputGroup.classList.add('hidden');
+          document.body.classList.add('kite-ext-show-2-panels');
+          document.body.classList.remove('kite-ext-show-3-panels');
+        }
+      }
+    }
+  }
+
   return my;
   
 }(KITE_EXT||{}));
@@ -286,3 +303,9 @@ var intervalID = setInterval(function() {
   }
   clearInterval(intervalID);
 }, 500);
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === "toggleSellPricePanel") {
+    KITE_EXT.toggleSellPricePanel();
+  }
+});
