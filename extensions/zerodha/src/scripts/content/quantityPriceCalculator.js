@@ -120,10 +120,54 @@
       });
       togglePanel();
       nodes.panel.addEventListener('input', function(e) {
-        recalculate();
+        const key = kebab2Camel(e.target.id);
+        saveValue(key, e.target.value);
       });
       document.body.classList.add('kite-ext-show-2-panels'); // third panel hidden
+      loadStoredValues();
     }
+  }
+
+  /**
+   * Load the stored values from the chrome storage and set them in the input fields.
+   * If the values are not found, the input fields will be empty.
+   */
+  function loadStoredValues() {
+    chrome.storage.sync.get(['funds', 'price', 'buyPrice', 'sellPrice'], function(items) {
+      if (items.funds !== undefined) {
+        nodes.panel.querySelector('#funds').value = items.funds;
+      }
+      if (items.price !== undefined) {
+        nodes.panel.querySelector('#price').value = items.price;
+      }
+      if (items.buyPrice !== undefined) {
+        nodes.panel.querySelector('#buy-price').value = items.buyPrice;
+      }
+      if (items.sellPrice !== undefined) {
+        nodes.panel.querySelector('#sell-price').value = items.sellPrice;
+      }
+      recalculate();
+    });
+  }
+
+  /**
+   * Convert a kebab-case string to camelCase. Used for converting kebab-case input ids to camelCase keys for storage
+   * @param {String} kebab
+   */
+  function kebab2Camel(kebab) {
+    return kebab.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+  }
+
+  /**
+   * Save a value in the chrome storage
+   * @param {String} key
+   * @param {String} value
+   * @returns void
+   */
+  function saveValue(key, value) {
+    let obj = {};
+    obj[key] = value;
+    chrome.storage.sync.set(obj);
   }
 
   /**
@@ -132,25 +176,17 @@
    */
   function globalListener(e) {
     console.log(e);
-    let captured = false;
     if (!e.ctrlKey && e.altKey && !e.shiftKey) {
-      captureAndSet(e.target, '#funds');
-      captured = true;
+      captureAndSet(e.target, 'funds');
     }
     if (!e.ctrlKey && !e.altKey && e.shiftKey) {
-      captureAndSet(e.target, '#price');
-      captured = true;
+      captureAndSet(e.target, 'price');
     }
     if (e.ctrlKey && !e.altKey && !e.shiftKey) {
-      captureAndSet(e.target, '#buy-price');
-      captured = true;
+      captureAndSet(e.target, 'buyPrice');
     }
     if (e.ctrlKey && e.altKey && !e.shiftKey) {
-      captureAndSet(e.target, '#sell-price');
-      captured = true;
-    }
-    if (captured) {
-      recalculate();
+      captureAndSet(e.target, 'sellPrice');
     }
   }
 
@@ -177,14 +213,14 @@
       quantity = (funds / price).toFixed(2);
     }
     nodes.panel.querySelector('#quantity').value = quantity;
-    const targetPrice = extractNumber(nodes.panel.querySelector('#buy-price').value);
-    const buyingPrice = extractNumber(nodes.panel.querySelector('#sell-price').value);
-    nodes.panel.querySelector('#buy-price-table .par').innerText = (targetPrice*1.0006).toFixed(2);  
-    nodes.panel.querySelector('#buy-price-table .x-16').innerText = (targetPrice*1.0016).toFixed(2);
-    nodes.panel.querySelector('#buy-price-table .x-26').innerText = (targetPrice*1.0026).toFixed(2);
-    nodes.panel.querySelector('#sell-price-table .par').innerText = (buyingPrice/1.0006).toFixed(2);
-    nodes.panel.querySelector('#sell-price-table .x-16').innerText = (buyingPrice/1.0016).toFixed(2);
-    nodes.panel.querySelector('#sell-price-table .x-26').innerText = (buyingPrice/1.0026).toFixed(2);
+    const buyPrice = extractNumber(nodes.panel.querySelector('#buy-price').value);
+    const sellPrice = extractNumber(nodes.panel.querySelector('#sell-price').value);
+    nodes.panel.querySelector('#buy-price-table .par').innerText = (buyPrice*1.0006).toFixed(2);  
+    nodes.panel.querySelector('#buy-price-table .x-16').innerText = (buyPrice*1.0016).toFixed(2);
+    nodes.panel.querySelector('#buy-price-table .x-26').innerText = (buyPrice*1.0026).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .par').innerText = (sellPrice/1.0006).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .x-16').innerText = (sellPrice/1.0016).toFixed(2);
+    nodes.panel.querySelector('#sell-price-table .x-26').innerText = (sellPrice/1.0026).toFixed(2);
   }
 
   /**
@@ -234,17 +270,13 @@
   }
 
   /**
-   * Capture a number from the source element and set it in the target element
+   * Capture a number from the source element (something clicked on the page) and set it in chromeStorage.
    * @param {Element} sourceEl 
-   * @param {String} targetSelector 
+   * @param {String} key 
    * @returns void
    */
-  function captureAndSet(sourceEl, targetSelector) {
+  function captureAndSet(sourceEl, key) {
     if (!sourceEl) {
-      return;
-    }
-    const targetEl = nodes.panel.querySelector(targetSelector)
-    if (!targetEl) {
       return;
     }
     let value = 0, found = true;
@@ -255,11 +287,7 @@
       found = false;
     }
     if (found) {
-      if (targetEl.matches('input[type=number],input[type=text]')) {
-        targetEl.value = value;
-      } else {
-        targetEl.innerText = value;
-      }
+      saveValue(key, value);
     }
   }
 
@@ -285,6 +313,23 @@
       }
     }
   }
+
+  chrome.storage.onChanged.addListener(function(changes, namespace) {
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+      if (namespace === 'sync') {
+        if (key === 'funds') {
+          nodes.panel.querySelector('#funds').value = newValue;
+        } else if (key === 'price') {
+          nodes.panel.querySelector('#price').value = newValue;
+        } else if (key === 'buyPrice') {
+          nodes.panel.querySelector('#buy-price').value = newValue;
+        } else if (key === 'sellPrice') {
+          nodes.panel.querySelector('#sell-price').value = newValue;
+        }
+        recalculate();
+      }
+    }
+  });
 
   return my;
   
