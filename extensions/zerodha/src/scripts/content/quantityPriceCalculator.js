@@ -20,8 +20,8 @@
         </div>
         <div class="operator">=</div>
         <div class="input-group-item">
-          <label for="quantity">Qty</label>
-          <input type="number" id="quantity" disabled />
+          <label for="quantity" class="bold">Qty</label>
+          <input type="number" id="quantity" disabled class="bold"/>
         </div>
       </div>
     </div>

@@ -53,7 +53,7 @@
         appearance: textfield;
     }
     &:disabled {
-      background: var(--color-bg-9);
+      background: #efefef;
     }
   }
   .input-group {
@@ -90,6 +90,12 @@
   }
   .bg-red {
     background-color: rgb(252,237,237);
+  }
+  .bold {
+    font-weight: 600;
+  }
+  .bolder {
+    font-weight: 900;
   }
   .keys {
     font-size: 0.6rem;
