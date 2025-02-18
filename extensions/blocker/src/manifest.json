@@ -14,7 +14,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://1337x.to/*"],
+      "matches": ["https://1337x.to/*", "https://eztvx.to/*"],
       "js": ["content.js"],
       "run_at": "document_end"
     }
